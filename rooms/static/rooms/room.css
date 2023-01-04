@@ -1,0 +1,14 @@
+.msg{
+    background-color: #d7d7d7;
+}
+#chat-message-submit {
+    color: white;
+    background-color: #1d7469;
+    margin: 3px;
+}
+
+#chat-message-submit:hover {
+    background-color: rgb(22, 95, 87);
+    color: rgb(204, 204, 204);
+    border: 1px solid white;
+}

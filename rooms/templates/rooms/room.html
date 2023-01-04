@@ -1,0 +1,124 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+{% block title %}{{ room.room_name }} |{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'rooms/room.css' %}">
+<style>
+    .chat-messages {
+        width: 350px;
+    }
+    #chat-messages{
+        height: 400px;
+        overflow-y: auto;
+    }
+</style>
+
+{% endblock head %}
+
+
+{% block body %}
+
+<div class="container mx-auto text-center mt-3">
+    <h1 class="text-white">{{ room.room_name }}</h1>
+</div>
+
+
+<div id="chat-messages" class="chat-messages bg-white rounded-4 px-2 py-4 mx-auto my-2">
+    {% for message in messages %}
+    <div class="row m-2 rounded-4 msg">
+        <div class="row">
+            <strong>{{ message.user.username }}</strong>
+        </div>
+        <div class="row">
+            <p>{{ message.content }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="chat-messages bg-white rounded-4 px-2 mx-auto my-4">
+
+    <form method="post" action="." class="d-flex align-items-center p-1">
+        {% csrf_token %}
+
+        <input type="text" class="me-3 flex-fill rounded p-2 my-1 border border-0" placeholder="Your message..."
+            id="chat-message-input" name="content">
+
+        <button class="rounded-4 btn" id="chat-message-submit">Send</button>
+
+    </form>
+</div>
+
+{% endblock body %}
+
+{% block script %}
+{{ room.slug|json_script:"json-roomname" }}
+{{ request.user.username|json_script:"json-username" }}
+<script>
+    const roomName = JSON.parse(document.getElementById("json-roomname").textContent);
+    const userName = JSON.parse(document.getElementById("json-username").textContent);
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+        + roomName
+        + '/'
+    );
+
+    chatSocket.onmessage = function (e) {
+        console.log("on message");
+
+        const data = JSON.parse(e.data);
+
+        if (data.message) {
+            let html = '<div class="row m-2 rounded-4 msg">';
+            html += '<div class="row">';
+            html += '<strong>' + data.username + '</strong>';
+            html += '</div>';
+            html += '<div class="row">';
+            html += '<p>' + data.message + '</p>';
+            html += '</div>';
+            html += '</div >';
+
+            document.querySelector("#chat-messages").innerHTML += html;
+
+        } else {
+            alert("The message was empty!");
+        }
+    };
+
+    chatSocket.onclose = function (e) {
+        console.log("on close");
+    };
+
+    //
+
+    document.querySelector("#chat-message-submit").onclick = function (e) {
+        e.preventDefault();
+
+        const messageInputDom = document.querySelector("#chat-message-input");
+        const message = messageInputDom.value;
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'room': roomName
+        }));
+
+        messageInputDom.value = "";
+        return false;
+    };
+
+    //
+
+    function scrollToBottom() {
+        const objDiv = document.querySelector("#chat-messages");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+    scrollToBottom();
+
+</script>
+
+{% endblock script %}

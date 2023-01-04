@@ -1,0 +1,27 @@
+body{
+    background-color: #2a9d8f;
+}
+.nav-link{
+    color: white;
+    font-weight: 600;
+}
+.navbar-brand{
+    font-weight: 500;
+}
+.btn{
+    color: white;
+    background-color: #2a9d8f;
+    margin: 3px;
+}
+.btn:hover{
+    background-color: #228f82;
+    color: rgb(204, 204, 204);
+}
+.login-link{
+    color: white;
+    text-decoration: none;
+    margin: 3px;
+}
+.login-link:hover{
+    color: rgb(204, 204, 204);
+}

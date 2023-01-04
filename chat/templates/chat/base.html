@@ -1,0 +1,56 @@
+{% load static %}
+
+<!--
+    #264653 
+    #2a9d8f 
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% block title %}{% endblock title %} chat</title>
+    <link rel="stylesheet" href="{% static 'chat\css\bootstrap.min.css' %}">
+    <script src="{% static 'chat\js\bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'chat\base.css' %}">
+    {% block head %}{% endblock head %}
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #264653;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">ChatRooms</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{% url 'chat:index' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'rooms:rooms' %}">Rooms</a>
+              </li>
+            </ul>
+
+            <div class="d-felx">
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'chat:logout' %}" class="btn">Logout</a>
+                {% else %}
+                <a href="{% url 'chat:login' %}" class="login-link">Log in</a>
+                <a href="{% url 'chat:signup' %}" class="btn">Sign up</a>
+                {% endif %}
+                
+            </div>
+          </div>
+        </div>
+      </nav>
+
+    {% block body %}{% endblock body %}
+    {% block script %}{% endblock script %}
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% extends 'chat/base.html' %}
+
+{% block title %}Rooms |{% endblock title %}
+
+{% block head %}
+<style>
+
+    #bton {
+        color: white;
+        background-color: #1d7469;
+        margin: 3px;
+    }
+
+    #bton:hover {
+        background-color: rgb(22, 95, 87);
+        color: rgb(204, 204, 204);
+        border: 1px solid white;
+    }
+    .room_container{
+        width: 15em;
+    }
+</style>
+{% endblock head %}
+
+
+{% block body %}
+
+<div class="container mx-auto text-center mt-5">
+    <h1 class="text-white">Rooms</h1>
+</div>
+
+<div class="container d-flex mt-5 justify-content-center flex-wrap">
+
+    {% for room in rooms%}
+    <div class="room_container mx-2 px-3 py-2 mt-2 bg-white shadow rounded-4">
+        <h4 class="text-center">{{ room.room_name }}</h4>
+        <a href="{% url 'rooms:room' room.slug %}" id="bton" class="btn w-100 rounded-4">Join</a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock body %}
